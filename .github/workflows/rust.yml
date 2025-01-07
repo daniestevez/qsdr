@@ -1,0 +1,44 @@
+name: rust
+
+on: push
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  x86_64:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Format
+      run: cargo fmt --all -- --check
+    - name: Clippy
+      run: cargo --verbose clippy --release -- -D warnings
+    - name: Build
+      run: cargo build --release --all-targets --verbose
+    - name: Run tests
+      run: cargo test --release --all-targets --verbose
+    - name: Build docs
+      run: RUSTFLAGS="-D warnings" cargo doc
+
+  aarch64:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install cross
+      run: cargo install cross
+    - name: Install aarch64-unknown-linux-gnu Rust target
+      run: rustup target add aarch64-unknown-linux-gnu
+    - uses: actions/checkout@v4      
+    - name: Format
+      run: cargo fmt --all -- --check
+    - name: Clippy
+      run: cross --verbose clippy --target aarch64-unknown-linux-gnu --release  -- -D warnings
+    - name: Build
+      run: cross build --release --all-targets --verbose
+    - name: Run tests
+      # instruction_benchmark reads the armv8 PMU cycle counter, which cannot be
+      # done with qemu as used in cross, so it is skipped to avoid getting
+      # SIGILL
+      run: cross test --release --target aarch64-unknown-linux-gnu --verbose -- --skip instruction_benchmark
+    - name: Build docs
+      run: RUSTFLAGS="-D warnings" cross doc

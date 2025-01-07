@@ -1,7 +1,19 @@
 mod cache_aligned;
 pub use cache_aligned::CacheAlignedBuffer;
 
-// TODO: write safety docs
+/// Buffer.
+///
+/// This trait represents a buffer that can be used by qsdr.
+///
+/// # Safety
+///
+/// The `as_mut_ptr` method must return a pointer to a contiguous allocation of
+/// `len` items of type `Item` that is correctly aligned and padded for this
+/// type. Read and write accesses to this allocation should be valid as long as
+/// the `Buffer` object is alive.
+///
+/// Multiple calls to `as_mut_ptr` and `len` should always return the same
+/// value.
 #[allow(clippy::len_without_is_empty)]
 pub unsafe trait Buffer: Send {
     type Item;

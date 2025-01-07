@@ -1,0 +1,36 @@
+name: gr3
+
+on: push
+
+jobs:
+  clang-format:
+    name: check C++ formatting (clang-format)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: |
+        find gr-qsdr_benchmark -name '*.cpp' -o -name '*.hpp' -o -name '*.h' -o -name '*.cc' -o -name '*.c' \
+             -exec clang-format -Werror --dry-run '{}' +
+  pycodestyle:
+    name: check Python formatting (pycodestyle)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install pycodestyle with pip
+      run: pip install pycodestyle
+    - name: Run pycodestyle
+      run: |
+        pycodestyle gr-qsdr_benchmark --exclude \
+            ./gr-qsdr_benchmark/docs/doxygen,./gr-qsdr_benchmark/examples,./gr-qsdr_benchmark/python/qsdr_benchmark/bindings
+  x86_64:
+    name: build and test (x86_64)
+    runs-on: ubuntu-latest
+    container: daniestevez/gr-oot-build:3.10.6.0
+    steps:
+    - uses: actions/checkout@v4
+    - name: CMake
+      run: mkdir gr-qsdr_benchmark/build && cd gr-qsdr_benchmark/build && cmake ..
+    - name: Make
+      run: cd gr-qsdr_benchmark/build && make -j$(nproc) -k
+    - name: Make Test
+      run: cd gr-qsdr_benchmark/build && ctest --output-on-failure

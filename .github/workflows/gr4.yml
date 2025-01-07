@@ -1,0 +1,20 @@
+name: gr4
+
+on: push
+
+jobs:
+  clang-format:
+    name: check C++ formatting (clang-format)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: |
+        find gr4-qsdr-benchmark -name '*.cpp' -o -name '*.hpp' -o -name '*.h' -o -name '*.cc' -o -name '*.c' \
+             -exec clang-format -Werror --dry-run '{}' +
+  aarch64:
+    name: build (aarch64)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build in Docker
+      run: gr4-qsdr-benchmark/build-in-docker.sh
