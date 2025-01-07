@@ -1,0 +1,10 @@
+samples/s = 5.04272e+07
+samples/s = 5.06104e+07
+samples/s = 5.02638e+07
+samples/s = 5.05079e+07
+samples/s = 5.04143e+07
+samples/s = 5.05711e+07
+samples/s = 4.99006e+07
+samples/s = 5.02952e+07
+samples/s = 5.02812e+07
+samples/s = 5.05474e+07

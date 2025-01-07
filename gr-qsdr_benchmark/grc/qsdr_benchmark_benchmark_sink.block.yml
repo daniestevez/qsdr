@@ -1,0 +1,13 @@
+id: qsdr_benchmark_benchmark_sink
+label: Benchmark Sink
+category: '[qsdr_benchmark]'
+
+templates:
+  imports: from gnuradio import qsdr_benchmark
+  make: qsdr_benchmark.benchmark_sink()
+
+inputs:
+- domain: stream
+  dtype: float
+
+file_format: 1

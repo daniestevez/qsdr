@@ -1,0 +1,17 @@
+samples/s = 3.183e8
+samples/s = 3.185e8
+samples/s = 3.184e8
+samples/s = 3.185e8
+samples/s = 3.185e8
+samples/s = 3.185e8
+samples/s = 3.185e8
+samples/s = 3.185e8
+samples/s = 3.185e8
+samples/s = 3.185e8
+samples/s = 3.186e8
+samples/s = 3.184e8
+samples/s = 3.185e8
+samples/s = 3.185e8
+samples/s = 3.185e8
+samples/s = 3.186e8
+samples/s = 3.186e8

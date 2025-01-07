@@ -1,0 +1,15 @@
+items/s = 5.178e6
+items/s = 5.187e6
+items/s = 5.177e6
+items/s = 5.193e6
+items/s = 5.188e6
+items/s = 5.175e6
+items/s = 5.181e6
+items/s = 5.178e6
+items/s = 5.183e6
+items/s = 5.178e6
+items/s = 5.180e6
+items/s = 5.181e6
+items/s = 5.178e6
+items/s = 5.186e6
+items/s = 5.184e6

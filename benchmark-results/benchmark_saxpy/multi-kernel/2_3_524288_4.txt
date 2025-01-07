@@ -1,0 +1,9 @@
+samples/s = 2.201e8, samples/cycle = 0.286, cycles/s = 7.693e8
+samples/s = 2.200e8, samples/cycle = 0.287, cycles/s = 7.662e8
+samples/s = 2.200e8, samples/cycle = 0.287, cycles/s = 7.670e8
+samples/s = 2.200e8, samples/cycle = 0.287, cycles/s = 7.663e8
+samples/s = 2.204e8, samples/cycle = 0.288, cycles/s = 7.661e8
+samples/s = 2.203e8, samples/cycle = 0.288, cycles/s = 7.652e8
+samples/s = 2.207e8, samples/cycle = 0.288, cycles/s = 7.654e8
+samples/s = 2.201e8, samples/cycle = 0.287, cycles/s = 7.675e8
+samples/s = 2.199e8, samples/cycle = 0.287, cycles/s = 7.667e8

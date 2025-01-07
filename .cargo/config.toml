@@ -1,0 +1,6 @@
+[target.aarch64-unknown-linux-gnu]
+# Flags for MPSoC
+#
+# outline-atomics are disabled. Since the Cortex-A53 does not support ARMv8.1
+# LSE atomics, outline-atomics is an extra performance cost for no gains.
+rustflags = ["-C", "target-feature=+aes,+crc,+neon,+sha2,-outline-atomics", "-C", "target-cpu=cortex-a53"]

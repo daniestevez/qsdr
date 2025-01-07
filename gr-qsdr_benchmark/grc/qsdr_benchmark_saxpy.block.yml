@@ -1,0 +1,27 @@
+id: qsdr_benchmark_saxpy
+label: Saxpy
+category: '[qsdr_benchmark]'
+
+templates:
+  imports: from gnuradio import qsdr_benchmark
+  make: qsdr_benchmark.saxpy(${a}, ${b})
+
+parameters:
+- id: a
+  label: a
+  dtype: float
+  default: 0.0
+- id: b
+  label: b
+  dtype: float
+  default: 0.0
+
+inputs:
+- domain: stream
+  dtype: float
+
+outputs:
+- domain: stream
+  dtype: float
+
+file_format: 1

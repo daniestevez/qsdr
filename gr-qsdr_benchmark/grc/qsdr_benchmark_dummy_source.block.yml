@@ -1,0 +1,13 @@
+id: qsdr_benchmark_dummy_source
+label: Dummy Source
+category: '[qsdr_benchmark]'
+
+templates:
+  imports: from gnuradio import qsdr_benchmark
+  make: qsdr_benchmark.dummy_source()
+
+outputs:
+- domain: stream
+  dtype: float
+
+file_format: 1

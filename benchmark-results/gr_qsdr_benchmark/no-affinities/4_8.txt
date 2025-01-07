@@ -1,0 +1,17 @@
+samples/s = 8.01226e+07
+samples/s = 8.5371e+07
+samples/s = 8.41227e+07
+samples/s = 7.79471e+07
+samples/s = 7.85816e+07
+samples/s = 8.45847e+07
+samples/s = 7.50374e+07
+samples/s = 7.82075e+07
+samples/s = 7.91003e+07
+samples/s = 7.38217e+07
+samples/s = 8.39954e+07
+samples/s = 7.94356e+07
+samples/s = 7.65584e+07
+samples/s = 8.35811e+07
+samples/s = 7.884e+07
+samples/s = 7.60529e+07
+samples/s = 8.25999e+07

@@ -1,0 +1,16 @@
+samples/s = 3.030e8
+samples/s = 3.031e8
+samples/s = 3.032e8
+samples/s = 3.033e8
+samples/s = 3.032e8
+samples/s = 3.033e8
+samples/s = 3.032e8
+samples/s = 3.031e8
+samples/s = 3.032e8
+samples/s = 3.032e8
+samples/s = 3.032e8
+samples/s = 3.033e8
+samples/s = 3.031e8
+samples/s = 3.033e8
+samples/s = 3.033e8
+samples/s = 3.031e8

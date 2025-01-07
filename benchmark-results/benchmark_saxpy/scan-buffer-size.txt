@@ -1,0 +1,16 @@
+buffer size = 256, samples/s = 1.121e9, samples/cycle = 0.841, cycles/s = 1.333e9
+buffer size = 512, samples/s = 1.217e9, samples/cycle = 0.913, cycles/s = 1.333e9
+buffer size = 1024, samples/s = 1.264e9, samples/cycle = 0.948, cycles/s = 1.333e9
+buffer size = 2048, samples/s = 1.279e9, samples/cycle = 0.960, cycles/s = 1.333e9
+buffer size = 4096, samples/s = 1.305e9, samples/cycle = 0.978, cycles/s = 1.333e9
+buffer size = 8192, samples/s = 1.317e9, samples/cycle = 0.988, cycles/s = 1.333e9
+buffer size = 16384, samples/s = 1.324e9, samples/cycle = 0.993, cycles/s = 1.333e9
+buffer size = 32768, samples/s = 1.323e9, samples/cycle = 0.992, cycles/s = 1.333e9
+buffer size = 65536, samples/s = 1.173e9, samples/cycle = 0.880, cycles/s = 1.333e9
+buffer size = 131072, samples/s = 1.143e9, samples/cycle = 0.858, cycles/s = 1.333e9
+buffer size = 262144, samples/s = 1.129e9, samples/cycle = 0.846, cycles/s = 1.333e9
+buffer size = 524288, samples/s = 1.122e9, samples/cycle = 0.841, cycles/s = 1.333e9
+buffer size = 1048576, samples/s = 9.950e8, samples/cycle = 0.746, cycles/s = 1.333e9
+buffer size = 2097152, samples/s = 4.395e8, samples/cycle = 0.330, cycles/s = 1.333e9
+buffer size = 4194304, samples/s = 4.014e8, samples/cycle = 0.301, cycles/s = 1.333e9
+buffer size = 8388608, samples/s = 4.073e8, samples/cycle = 0.306, cycles/s = 1.333e9

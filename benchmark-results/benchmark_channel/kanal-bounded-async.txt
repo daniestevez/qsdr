@@ -1,0 +1,9 @@
+items/s = 3.260e6
+items/s = 3.251e6
+items/s = 3.266e6
+items/s = 3.282e6
+items/s = 3.295e6
+items/s = 3.280e6
+items/s = 3.282e6
+items/s = 3.259e6
+items/s = 3.289e6

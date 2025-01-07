@@ -1,0 +1,16 @@
+samples/s = 3.686e8, samples/cycle = 0.282, cycles/s = 1.307e9
+samples/s = 3.717e8, samples/cycle = 0.281, cycles/s = 1.321e9
+samples/s = 3.755e8, samples/cycle = 0.282, cycles/s = 1.332e9
+samples/s = 3.741e8, samples/cycle = 0.281, cycles/s = 1.330e9
+samples/s = 3.706e8, samples/cycle = 0.281, cycles/s = 1.317e9
+samples/s = 3.757e8, samples/cycle = 0.282, cycles/s = 1.331e9
+samples/s = 3.757e8, samples/cycle = 0.282, cycles/s = 1.332e9
+samples/s = 3.715e8, samples/cycle = 0.281, cycles/s = 1.320e9
+samples/s = 3.755e8, samples/cycle = 0.282, cycles/s = 1.332e9
+samples/s = 3.723e8, samples/cycle = 0.281, cycles/s = 1.326e9
+samples/s = 3.707e8, samples/cycle = 0.280, cycles/s = 1.325e9
+samples/s = 3.755e8, samples/cycle = 0.282, cycles/s = 1.331e9
+samples/s = 3.713e8, samples/cycle = 0.281, cycles/s = 1.322e9
+samples/s = 3.748e8, samples/cycle = 0.282, cycles/s = 1.331e9
+samples/s = 3.744e8, samples/cycle = 0.282, cycles/s = 1.327e9
+samples/s = 3.726e8, samples/cycle = 0.282, cycles/s = 1.323e9

@@ -1,0 +1,7 @@
+samples/s = 1.801e8, samples/cycle = 0.181, cycles/s = 9.973e8
+samples/s = 1.768e8, samples/cycle = 0.214, cycles/s = 8.250e8
+samples/s = 1.761e8, samples/cycle = 0.233, cycles/s = 7.552e8
+samples/s = 1.786e8, samples/cycle = 0.198, cycles/s = 9.015e8
+samples/s = 1.756e8, samples/cycle = 0.232, cycles/s = 7.567e8
+samples/s = 1.759e8, samples/cycle = 0.233, cycles/s = 7.545e8
+samples/s = 1.762e8, samples/cycle = 0.234, cycles/s = 7.543e8

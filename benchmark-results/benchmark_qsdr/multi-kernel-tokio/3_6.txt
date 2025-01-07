@@ -1,0 +1,8 @@
+samples/s = 1.497e8
+samples/s = 1.497e8
+samples/s = 1.504e8
+samples/s = 1.497e8
+samples/s = 1.505e8
+samples/s = 1.495e8
+samples/s = 1.502e8
+samples/s = 1.498e8

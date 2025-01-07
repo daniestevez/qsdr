@@ -1,0 +1,15 @@
+samples/s = 2.730e8
+samples/s = 2.732e8
+samples/s = 2.733e8
+samples/s = 2.733e8
+samples/s = 2.733e8
+samples/s = 2.732e8
+samples/s = 2.733e8
+samples/s = 2.732e8
+samples/s = 2.732e8
+samples/s = 2.733e8
+samples/s = 2.731e8
+samples/s = 2.732e8
+samples/s = 2.732e8
+samples/s = 2.734e8
+samples/s = 2.733e8

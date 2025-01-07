@@ -1,0 +1,11 @@
+items/s = 3.789e6
+items/s = 3.782e6
+items/s = 3.783e6
+items/s = 3.779e6
+items/s = 3.779e6
+items/s = 3.784e6
+items/s = 3.786e6
+items/s = 3.777e6
+items/s = 3.786e6
+items/s = 3.784e6
+items/s = 3.781e6

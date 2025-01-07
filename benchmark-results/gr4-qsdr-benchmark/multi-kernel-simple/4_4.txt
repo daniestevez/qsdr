@@ -1,0 +1,11 @@
+samples/s = 4.517e+08
+samples/s = 4.462e+08
+samples/s = 4.515e+08
+samples/s = 4.455e+08
+samples/s = 4.450e+08
+samples/s = 4.461e+08
+samples/s = 4.515e+08
+samples/s = 4.478e+08
+samples/s = 4.451e+08
+samples/s = 4.468e+08
+samples/s = 4.520e+08

@@ -1,0 +1,6 @@
+/*!
+ * \defgroup block GNU Radio QSDR_BENCHMARK C++ Signal Processing Blocks
+ * \brief All C++ blocks that can be used from the QSDR_BENCHMARK GNU Radio
+ *        module are listed here or in the subcategories below.
+ *
+ */
