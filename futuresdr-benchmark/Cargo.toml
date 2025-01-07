@@ -2,6 +2,12 @@
 name = "futuresdr-benchmark"
 version = "0.1.0"
 edition = "2021"
+authors = ["Daniel Estevez <daniel@destevez.net>"]
+description = "FutureSDR benchmark"
+license = "MIT OR Apache-2.0"
+homepage = "https://github.com/daniestevez/qsdr/"
+repository = "https://github.com/daniestevez/qsdr/"
+keywords = ["sdr"]
 
 [dependencies]
 clap = { version = "4.5.20", features = ["derive"] }

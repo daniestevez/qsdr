@@ -2,13 +2,19 @@
 name = "qsdr"
 version = "0.1.0"
 edition = "2021"
+authors = ["Daniel Estevez <daniel@destevez.net>"]
+description = "qsdr experimental high-performance SDR runtime"
+license = "MIT OR Apache-2.0"
+homepage = "https://github.com/daniestevez/qsdr/"
+repository = "https://github.com/daniestevez/qsdr/"
+keywords = ["sdr"]
 
 [dependencies]
 anyhow = "1.0.91"
 futures = "0.3.31"
 libc = "0.2.159"
 pin-project-lite = "0.2.15"
-qsdr-macros = { path = "../qsdr-macros" }
+qsdr-macros = { path = "../qsdr-macros", version = "0.1.0" }
 
 [dev-dependencies]
 rand = "0.8.5"
