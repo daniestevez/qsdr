@@ -12,6 +12,12 @@ in embedded aarch64 systems, such as the AMD RFSoC/MPSoC quad-core Cortex-A53
 CPU complex, which is present in several AMD FPGA SoCs. Another focus of the
 project experiments is benchmarking and comparisons with other SDR runtimes.
 
+## Benchmark report
+
+The report of the benchmarks contained in this repository is built with CI and
+published to Github pages. It can be accessed at
+[https://daniestevez.github.io/qsdr/](https://daniestevez.github.io/qsdr/)
+
 ## Repository structure
 
 This repository is organized as follows:
