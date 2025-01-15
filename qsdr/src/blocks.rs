@@ -1,6 +1,10 @@
 pub mod basic {
     mod head;
     pub use head::Head;
+    mod null_sink;
+    pub use null_sink::NullSink;
+    mod null_source;
+    pub use null_source::NullSource;
     mod passthrough;
     pub use passthrough::Passthrough;
     mod ref_clone;
