@@ -222,13 +222,13 @@ type Buff = CacheAlignedBuffer<f32>;
 
 fn single_core(args: &Args) -> Result<()> {
     pin_cpu()?;
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     let dummy_source = DummySource::<Quantum<Buff>>::new();
-    let saxpy = Saxpy::<Buff, Spsc, SpscRef>::new(rng.gen(), rng.gen());
+    let saxpy = Saxpy::<Buff, Spsc, SpscRef>::new(rng.random(), rng.random());
     let benchmark_sink = BenchmarkSink::new();
 
     let buf_len = args.buffer_size / std::mem::size_of::<<Buff as Buffer>::Item>();
-    let buffers = std::iter::repeat_with(|| Quantum::new(Buff::from_fn(buf_len, |_| rng.gen())))
+    let buffers = std::iter::repeat_with(|| Quantum::new(Buff::from_fn(buf_len, |_| rng.random())))
         .take(args.num_buffers);
 
     let mut fg = Flowgraph::new();
@@ -300,16 +300,16 @@ fn multi_kernel(args: &Args, sub: &MultiKernel) -> Result<()> {
 
     macro_rules! make_fg {
         ($dummy_source:ident, $benchmark_sink:ident, $last_saxpy:ident, $($saxpy:ident),*) => {
-            let mut rng = rand::thread_rng();
+            let mut rng = rand::rng();
             let $dummy_source = DummySource::<Quantum<Buff>>::new();
             $(
-                let $saxpy = Saxpy::<Buff, Spsc, Spsc>::new(rng.gen(), rng.gen());
+                let $saxpy = Saxpy::<Buff, Spsc, Spsc>::new(rng.random(), rng.random());
             )*
-            let $last_saxpy = Saxpy::<Buff, Spsc, SpscRef>::new(rng.gen(), rng.gen());
+            let $last_saxpy = Saxpy::<Buff, Spsc, SpscRef>::new(rng.random(), rng.random());
             let $benchmark_sink = BenchmarkSink::new();
 
             let buf_len = args.buffer_size / std::mem::size_of::<<Buff as Buffer>::Item>();
-            let buffers = std::iter::repeat_with(|| Quantum::new(Buff::from_fn(buf_len, |_| rng.gen())))
+            let buffers = std::iter::repeat_with(|| Quantum::new(Buff::from_fn(buf_len, |_| rng.random())))
                 .take(args.num_buffers);
 
             let mut fg = Flowgraph::new();
@@ -680,22 +680,22 @@ fn multi_kernel_executor(args: &Args, sub: &MultiKernel, executor: Executor) -> 
         core_ids.len()
     );
 
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     let dummy_source = DummySource::<Quantum<Buff>>::new();
     let benchmark_sink = BenchmarkSink::new();
 
     let mut fg = Flowgraph::new();
     let dummy_source = fg.add_block(dummy_source);
     let mut saxpys = std::iter::repeat_with(|| {
-        fg.add_block(Saxpy::<Buff, Spsc, Spsc>::new(rng.gen(), rng.gen()))
+        fg.add_block(Saxpy::<Buff, Spsc, Spsc>::new(rng.random(), rng.random()))
     })
     .take(sub.num_kernels - 1)
     .collect::<Vec<_>>();
-    let last_saxpy = fg.add_block(Saxpy::<Buff, Spsc, SpscRef>::new(rng.gen(), rng.gen()));
+    let last_saxpy = fg.add_block(Saxpy::<Buff, Spsc, SpscRef>::new(rng.random(), rng.random()));
     let benchmark_sink = fg.add_block(benchmark_sink);
 
     let buf_len = args.buffer_size / std::mem::size_of::<<Buff as Buffer>::Item>();
-    let buffers = std::iter::repeat_with(|| Quantum::new(Buff::from_fn(buf_len, |_| rng.gen())))
+    let buffers = std::iter::repeat_with(|| Quantum::new(Buff::from_fn(buf_len, |_| rng.random())))
         .take(args.num_buffers);
 
     let mut circuit = fg.new_circuit(buffers);
@@ -796,16 +796,16 @@ fn multi_kernel_executor(args: &Args, sub: &MultiKernel, executor: Executor) -> 
 }
 
 fn benchmark_ref(args: &Args) -> Result<()> {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     let dummy_source = DummySource::<Quantum<Buff>, Spsc, SpscRef>::new();
     let ref_clone = RefClone::<Buff, SpscRef, SpscRef, Spsc>::new();
     let benchmark_sink = BenchmarkSink::new();
 
     let buf_len = args.buffer_size / std::mem::size_of::<<Buff as Buffer>::Item>();
-    let buffers0 = std::iter::repeat_with(|| Quantum::new(Buff::from_fn(buf_len, |_| rng.gen())))
+    let buffers0 = std::iter::repeat_with(|| Quantum::new(Buff::from_fn(buf_len, |_| rng.random())))
         .take(args.num_buffers)
         .collect::<Vec<_>>();
-    let buffers1 = std::iter::repeat_with(|| Quantum::new(Buff::from_fn(buf_len, |_| rng.gen())))
+    let buffers1 = std::iter::repeat_with(|| Quantum::new(Buff::from_fn(buf_len, |_| rng.random())))
         .take(args.num_buffers)
         .collect::<Vec<_>>();
 

@@ -288,11 +288,11 @@ mod test {
     #[test]
     fn out_of_place() {
         let n = 1024;
-        let mut rng = rand::thread_rng();
-        let mut buf: Vec<f32> = std::iter::repeat_with(|| rng.gen()).take(n).collect();
+        let mut rng = rand::rng();
+        let mut buf: Vec<f32> = std::iter::repeat_with(|| rng.random()).take(n).collect();
         let mut out = vec![0.0; n];
-        let a = rng.gen();
-        let b = rng.gen();
+        let a = rng.random();
+        let b = rng.random();
         let saxpy = Saxpy::new(a, b);
         saxpy.run_generic_out_of_place(&buf, &mut out);
         saxpy.run_generic(&mut buf);
@@ -303,11 +303,11 @@ mod test {
     #[test]
     fn cortex_a53() {
         let n = 1024;
-        let mut rng = rand::thread_rng();
-        let mut buf: Vec<f32> = std::iter::repeat_with(|| rng.gen()).take(n).collect();
+        let mut rng = rand::rng();
+        let mut buf: Vec<f32> = std::iter::repeat_with(|| rng.random()).take(n).collect();
         let mut buf_generic = buf.clone();
-        let a = rng.gen();
-        let b = rng.gen();
+        let a = rng.random();
+        let b = rng.random();
         let saxpy = Saxpy::new(a, b);
         saxpy.run_generic(&mut buf_generic);
         saxpy.run_cortex_a53(&mut buf);
@@ -318,12 +318,12 @@ mod test {
     #[test]
     fn cortex_a53_out_of_place() {
         let n = 1024;
-        let mut rng = rand::thread_rng();
-        let buf: Vec<f32> = std::iter::repeat_with(|| rng.gen()).take(n).collect();
+        let mut rng = rand::rng();
+        let buf: Vec<f32> = std::iter::repeat_with(|| rng.random()).take(n).collect();
         let mut out = vec![0.0; n];
         let mut buf_generic = buf.clone();
-        let a = rng.gen();
-        let b = rng.gen();
+        let a = rng.random();
+        let b = rng.random();
         let saxpy = Saxpy::new(a, b);
         saxpy.run_generic(&mut buf_generic);
         saxpy.run_cortex_a53_out_of_place(&buf, &mut out);

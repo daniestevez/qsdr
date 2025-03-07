@@ -208,18 +208,24 @@ impl<T, W> Common<T, W> {
             let mut read_idx = self.read_idx().load(Relaxed);
             let write_idx = self.shared().load(Relaxed) >> WRITE_IDX_SHIFT;
             while read_idx != write_idx {
-                self.slot_buf()
-                    .add((read_idx & self.mask) as usize)
-                    .drop_in_place();
+                unsafe {
+                    self.slot_buf()
+                        .add((read_idx & self.mask) as usize)
+                        .drop_in_place()
+                };
                 read_idx = (read_idx.wrapping_add(1) << WRITE_IDX_SHIFT) >> WRITE_IDX_SHIFT;
             }
         }
-        self.shared
-            .byte_add(Self::WAKER_BYTE_OFFSET)
-            .cast::<W>()
-            .drop_in_place();
+        unsafe {
+            self.shared
+                .byte_add(Self::WAKER_BYTE_OFFSET)
+                .cast::<W>()
+                .drop_in_place()
+        };
         let size = usize::try_from(self.mask).unwrap() + 1;
-        dealloc(self.shared.as_ptr().cast::<u8>(), Self::shared_layout(size));
+        unsafe {
+            dealloc(self.shared.as_ptr().cast::<u8>(), Self::shared_layout(size))
+        };
     }
 
     pub fn shared(&self) -> &AtomicU32 {

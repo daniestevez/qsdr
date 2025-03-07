@@ -40,8 +40,8 @@ struct MultiKernel {
 fn single_core() -> Result<()> {
     let mut fg = Flowgraph::new();
     let source = DummySource::<f32>::new();
-    let mut rng = rand::thread_rng();
-    let saxpy = Saxpy::new(rng.gen(), rng.gen());
+    let mut rng = rand::rng();
+    let saxpy = Saxpy::new(rng.random(), rng.random());
     let sink = BenchmarkSink::<f32>::new();
     connect!(fg, source > saxpy > sink);
     Runtime::with_scheduler(SmolScheduler::new(1, true)).run(fg)?;
@@ -65,10 +65,10 @@ fn multi_kernel(args: &MultiKernel, cpu_pin: bool) -> Result<()> {
     let source = fg.add_block(DummySource::<f32>::new())?;
     cpu_pins.insert(source, 0);
 
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     macro_rules! make_saxpy {
         () => {
-            fg.add_block(Saxpy::new(rng.gen(), rng.gen()))?
+            fg.add_block(Saxpy::new(rng.random(), rng.random()))?
         };
     }
 

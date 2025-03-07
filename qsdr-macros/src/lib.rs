@@ -286,7 +286,7 @@ pub fn block_derive(input: TokenStream) -> TokenStream {
         }
     };
 
-    let gen = quote! {
+    let code = quote! {
         const _: () =  {
             #block_channels
             #block_seeds
@@ -295,8 +295,8 @@ pub fn block_derive(input: TokenStream) -> TokenStream {
             #ports_impl
         };
     };
-    //println!("{}", pretty_print(&gen));
-    gen.into()
+    //println!("{}", pretty_print(&code));
+    code.into()
 }
 
 // https://stackoverflow.com/a/74360109
