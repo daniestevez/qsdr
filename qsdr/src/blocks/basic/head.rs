@@ -74,7 +74,10 @@ mod test {
                 .collect::<Vec<_>>()
                 .into_iter();
         let elements_source = std::iter::repeat_with(|| {
-            std::iter::repeat_with(|| rng.random()).take(buffer_size).collect::<Vec<_>>().into()
+            std::iter::repeat_with(|| rng.random())
+                .take(buffer_size)
+                .collect::<Vec<_>>()
+                .into()
         })
         .take(num_elements_source)
         .collect::<Vec<_>>();

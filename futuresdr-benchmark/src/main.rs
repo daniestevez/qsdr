@@ -2,8 +2,8 @@ use clap::{Parser, Subcommand};
 use futuresdr::{
     macros::connect,
     runtime::{
-        scheduler::{CpuPinScheduler, SmolScheduler},
         Flowgraph, Result, Runtime,
+        scheduler::{CpuPinScheduler, SmolScheduler},
     },
 };
 use futuresdr_benchmark::blocks::{BenchmarkSink, DummySource, Saxpy};

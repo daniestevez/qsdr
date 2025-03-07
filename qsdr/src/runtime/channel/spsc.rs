@@ -1,5 +1,5 @@
 use super::Channel;
-use crate::channel::spsc::futures::{channel, Receiver, Sender};
+use crate::channel::spsc::futures::{Receiver, Sender, channel};
 use anyhow::Result;
 use std::{fmt::Debug, future::Future};
 

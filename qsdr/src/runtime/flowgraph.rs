@@ -282,7 +282,8 @@ impl CircuitData {
                 if self.is_leaf(edge.dest.node) {
                     anyhow::ensure!(
                         edge.return_endpoint.is_some(),
-                        "edge {edge:?} in circuit {id:?} connects to a leaf but does not have a return");
+                        "edge {edge:?} in circuit {id:?} connects to a leaf but does not have a return"
+                    );
                 }
                 pending.push(edge.dest);
             }

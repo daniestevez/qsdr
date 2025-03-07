@@ -1,4 +1,4 @@
-use super::{base::BaseChannel, Receiver, Sender};
+use super::{Receiver, Sender, base::BaseChannel};
 use anyhow::Result;
 use std::{borrow::Borrow, convert::AsRef, mem::ManuallyDrop};
 

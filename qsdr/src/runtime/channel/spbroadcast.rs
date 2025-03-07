@@ -2,16 +2,16 @@ use super::{Channel, RefReceiver};
 use crate::channel::{mpsc::futures as mpsc, spsc::futures as spsc};
 use anyhow::Result;
 use std::{
-    alloc::{alloc, dealloc, handle_alloc_error, Layout},
+    alloc::{Layout, alloc, dealloc, handle_alloc_error},
     borrow::Borrow,
     mem::size_of,
     ptr::NonNull,
     sync::{
+        Arc,
         atomic::{
             AtomicUsize,
             Ordering::{Acquire, Relaxed, Release},
         },
-        Arc,
     },
 };
 

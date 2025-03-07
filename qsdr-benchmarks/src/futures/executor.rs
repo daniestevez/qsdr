@@ -1,12 +1,12 @@
 // Part of this code is taken from futures-rs/futures-executor
 
 use futures::{executor::enter, pin_mut};
-use futures_task::{waker_ref, ArcWake};
+use futures_task::{ArcWake, waker_ref};
 use std::{
     future::Future,
     sync::{
-        atomic::{AtomicBool, Ordering},
         Arc,
+        atomic::{AtomicBool, Ordering},
     },
     task::{Context, Poll},
     thread::{self, Thread},

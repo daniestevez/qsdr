@@ -1,4 +1,4 @@
-use crate::{prelude::*, QuantumSnapshot};
+use crate::{QuantumSnapshot, prelude::*};
 use std::future::Future;
 
 pub trait Sink<T> {

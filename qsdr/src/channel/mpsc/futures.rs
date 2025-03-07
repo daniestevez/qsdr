@@ -1,6 +1,6 @@
 use super::chan::{
-    self, Common, Waker, AVAILABLE_SHIFT, MAX_PENDING_SLOTS, RECEIVER_SLEEPING,
-    TRANSMITTERS_DROPPED, WRITE_IDX_SHIFT,
+    self, AVAILABLE_SHIFT, Common, MAX_PENDING_SLOTS, RECEIVER_SLEEPING, TRANSMITTERS_DROPPED,
+    WRITE_IDX_SHIFT, Waker,
 };
 use futures::stream::Stream;
 use std::{

@@ -1,4 +1,4 @@
-use qsdr_benchmarks::{benchmark, expected_cycles, Buffer};
+use qsdr_benchmarks::{Buffer, benchmark, expected_cycles};
 
 // Cortex-A53
 //

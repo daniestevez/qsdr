@@ -1,5 +1,5 @@
 use std::{
-    alloc::{alloc, dealloc, handle_alloc_error, Layout},
+    alloc::{Layout, alloc, dealloc, handle_alloc_error},
     marker::PhantomData,
     ptr::NonNull,
     sync::atomic::{
@@ -136,10 +136,10 @@ impl<T, W: Default> Common<T, W> {
             .unwrap()
             .next_power_of_two();
         assert!(size != 0); // this happens when next_power_of_two overflows in release mode
-                            // The size needs to be strictly smaller than that which can be
-                            // addressed with 32 - WRITE_IDX_SHIFT bits, in order to guarantee that
-                            // the slots get different sequences in consecutive laps around the
-                            // circular buffer.
+        // The size needs to be strictly smaller than that which can be
+        // addressed with 32 - WRITE_IDX_SHIFT bits, in order to guarantee that
+        // the slots get different sequences in consecutive laps around the
+        // circular buffer.
         assert!(u32::try_from(size).unwrap() < 1 << (32 - WRITE_IDX_SHIFT));
         let shared = {
             let layout = Self::shared_layout(size);
@@ -223,9 +223,7 @@ impl<T, W> Common<T, W> {
                 .drop_in_place()
         };
         let size = usize::try_from(self.mask).unwrap() + 1;
-        unsafe {
-            dealloc(self.shared.as_ptr().cast::<u8>(), Self::shared_layout(size))
-        };
+        unsafe { dealloc(self.shared.as_ptr().cast::<u8>(), Self::shared_layout(size)) };
     }
 
     pub fn shared(&self) -> &AtomicU32 {
