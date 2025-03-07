@@ -1,9 +1,9 @@
 use super::{
+    Channel,
     base::Spsc,
     ref_receiver::{RefReceiver, RefReceiverSeed},
-    Channel,
 };
-use crate::channel::spsc::futures::{channel, Receiver, Sender};
+use crate::channel::spsc::futures::{Receiver, Sender, channel};
 use anyhow::Result;
 use std::fmt::Debug;
 

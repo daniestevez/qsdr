@@ -1,4 +1,4 @@
-use crate::{prelude::*, QuantumSnapshot};
+use crate::{QuantumSnapshot, prelude::*};
 use std::future::Future;
 
 pub trait Source<T> {
@@ -82,7 +82,7 @@ mod test {
         scheduler::{run, sequence2},
     };
     use futures::executor::block_on;
-    use rand::{prelude::*, Fill};
+    use rand::{Fill, prelude::*};
 
     #[test]
     fn source_iterator() {

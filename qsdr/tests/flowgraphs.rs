@@ -16,7 +16,10 @@ fn spbroadcast() {
     let mut rng = rand::rng();
 
     let elements = std::iter::repeat_with(|| {
-        std::iter::repeat_with(|| rng.random()).take(buffer_size).collect::<Vec<_>>().into()
+        std::iter::repeat_with(|| rng.random())
+            .take(buffer_size)
+            .collect::<Vec<_>>()
+            .into()
     })
     .take(num_elements)
     .collect::<Vec<_>>();

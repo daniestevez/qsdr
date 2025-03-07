@@ -1,14 +1,14 @@
 use anyhow::Result;
 use clap::{Parser, Subcommand};
 use qsdr::{
+    Block, BlockWorkStatus, Buffer, Channel, Flowgraph, Quantum, Receiver, Run, WorkInPlace,
+    WorkSink, WorkStatus,
     blocks::basic::RefClone,
     buffers::CacheAlignedBuffer,
     channels::{Spsc, SpscRef},
     kernels,
     ports::{PortInQ, PortOut, PortOutQ, PortRefInQ, PortSource},
     scheduler::{run, sequence2, sequence3, sequence4, sequence5},
-    Block, BlockWorkStatus, Buffer, Channel, Flowgraph, Quantum, Receiver, Run, WorkInPlace,
-    WorkSink, WorkStatus,
 };
 use qsdr_benchmarks::{
     affinity::{get_core_ids, pin_cpu},
@@ -691,7 +691,10 @@ fn multi_kernel_executor(args: &Args, sub: &MultiKernel, executor: Executor) -> 
     })
     .take(sub.num_kernels - 1)
     .collect::<Vec<_>>();
-    let last_saxpy = fg.add_block(Saxpy::<Buff, Spsc, SpscRef>::new(rng.random(), rng.random()));
+    let last_saxpy = fg.add_block(Saxpy::<Buff, Spsc, SpscRef>::new(
+        rng.random(),
+        rng.random(),
+    ));
     let benchmark_sink = fg.add_block(benchmark_sink);
 
     let buf_len = args.buffer_size / std::mem::size_of::<<Buff as Buffer>::Item>();
@@ -802,12 +805,14 @@ fn benchmark_ref(args: &Args) -> Result<()> {
     let benchmark_sink = BenchmarkSink::new();
 
     let buf_len = args.buffer_size / std::mem::size_of::<<Buff as Buffer>::Item>();
-    let buffers0 = std::iter::repeat_with(|| Quantum::new(Buff::from_fn(buf_len, |_| rng.random())))
-        .take(args.num_buffers)
-        .collect::<Vec<_>>();
-    let buffers1 = std::iter::repeat_with(|| Quantum::new(Buff::from_fn(buf_len, |_| rng.random())))
-        .take(args.num_buffers)
-        .collect::<Vec<_>>();
+    let buffers0 =
+        std::iter::repeat_with(|| Quantum::new(Buff::from_fn(buf_len, |_| rng.random())))
+            .take(args.num_buffers)
+            .collect::<Vec<_>>();
+    let buffers1 =
+        std::iter::repeat_with(|| Quantum::new(Buff::from_fn(buf_len, |_| rng.random())))
+            .take(args.num_buffers)
+            .collect::<Vec<_>>();
 
     let mut fg = Flowgraph::new();
     let dummy_source = fg.add_block(dummy_source);

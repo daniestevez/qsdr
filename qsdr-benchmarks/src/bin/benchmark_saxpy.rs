@@ -2,10 +2,10 @@ use anyhow::Result;
 use clap::{Parser, Subcommand};
 use qsdr::{channel::spsc, kernels::saxpy::Saxpy};
 use qsdr_benchmarks::{
+    Buffer,
     affinity::{get_core_ids, pin_cpu},
     asm::get_cpu_cycles,
     futures::executor::block_on,
-    Buffer,
 };
 use rand::prelude::*;
 use std::{thread, time::Instant};

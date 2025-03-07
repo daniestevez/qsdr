@@ -1,11 +1,11 @@
 use super::{
+    Channel,
     base::{Mpsc, Spsc},
     ref_receiver::{RefReceiver, RefReceiverSeed},
-    Channel,
 };
 use crate::channel::{
-    mpsc::futures::{channel as mpsc_channel, Receiver as MpscReceiver},
-    spsc::futures::{channel, Sender},
+    mpsc::futures::{Receiver as MpscReceiver, channel as mpsc_channel},
+    spsc::futures::{Sender, channel},
 };
 use anyhow::Result;
 use std::fmt::Debug;

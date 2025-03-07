@@ -93,7 +93,10 @@ mod test {
         let buffers0 = make_buffers();
         let buffers1 = make_buffers();
         let elements = std::iter::repeat_with(|| {
-            std::iter::repeat_with(|| rng.random()).take(buffer_size).collect::<Vec<_>>().into()
+            std::iter::repeat_with(|| rng.random())
+                .take(buffer_size)
+                .collect::<Vec<_>>()
+                .into()
         })
         .take(num_elements)
         .collect::<Vec<_>>();

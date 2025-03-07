@@ -1,8 +1,8 @@
 use super::chan::{
-    self, Common, Waker, AVAILABLE_SHIFT, MAX_PENDING_SLOTS, RECEIVER_SLEEPING,
-    TRANSMITTERS_DROPPED, WRITE_IDX_SHIFT,
+    self, AVAILABLE_SHIFT, Common, MAX_PENDING_SLOTS, RECEIVER_SLEEPING, TRANSMITTERS_DROPPED,
+    WRITE_IDX_SHIFT, Waker,
 };
-use libc::{syscall, SYS_futex, FUTEX_PRIVATE_FLAG, FUTEX_WAIT, FUTEX_WAKE};
+use libc::{FUTEX_PRIVATE_FLAG, FUTEX_WAIT, FUTEX_WAKE, SYS_futex, syscall};
 use std::sync::atomic::Ordering::{Acquire, Relaxed, Release};
 
 #[derive(Debug)]

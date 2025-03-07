@@ -31,19 +31,19 @@ pub mod channels {
 
 pub mod scheduler {
     pub use crate::runtime::scheduler::{
-        run, sequence2, sequence3, sequence4, sequence5, sequence6, sequence7, sequence8,
-        Sequence2, Sequence3, Sequence4, Sequence5, Sequence6, Sequence7, Sequence8,
+        Sequence2, Sequence3, Sequence4, Sequence5, Sequence6, Sequence7, Sequence8, run,
+        sequence2, sequence3, sequence4, sequence5, sequence6, sequence7, sequence8,
     };
 }
 
 pub mod prelude {
     pub use crate::{
+        Block, BlockWorkStatus, Buffer, Channel, DoneWithOutput, DoneWithoutOutput, Flowgraph,
+        Quantum, Receiver, Run, WorkCustom, WorkInPlace, WorkSink, WorkStatus, WorkWithRef,
         channels::{Mpsc, SpBroadcast, Spsc, SpscRef, SpscmrRef},
         ports::{
             PortIn, PortInQ, PortOut, PortOutQ, PortRefIn, PortRefInQ, PortSource, PortSourceQ,
         },
-        Block, BlockWorkStatus, Buffer, Channel, DoneWithOutput, DoneWithoutOutput, Flowgraph,
-        Quantum, Receiver, Run, WorkCustom, WorkInPlace, WorkSink, WorkStatus, WorkWithRef,
     };
     pub use anyhow::Result;
 }

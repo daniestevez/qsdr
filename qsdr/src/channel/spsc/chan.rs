@@ -1,5 +1,5 @@
 use std::{
-    alloc::{alloc, dealloc, handle_alloc_error, Layout},
+    alloc::{Layout, alloc, dealloc, handle_alloc_error},
     marker::PhantomData,
     ptr::NonNull,
     sync::atomic::{
@@ -197,9 +197,7 @@ impl<T, W> Common<T, W> {
                 .drop_in_place()
         };
         let size = usize::try_from(self.mask).unwrap() + 1;
-        unsafe {
-            dealloc(self.shared.as_ptr().cast::<u8>(), Self::shared_layout(size))
-        };
+        unsafe { dealloc(self.shared.as_ptr().cast::<u8>(), Self::shared_layout(size)) };
     }
 
     pub fn shared(&self) -> &AtomicU32 {

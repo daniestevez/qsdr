@@ -1,10 +1,10 @@
 use super::chan::{
-    self, Common, Waker, AVAILABLE_SHIFT, MAX_PENDING_SLOTS, RECEIVER_SLEEPING, TRANSMITTER_DROPPED,
+    self, AVAILABLE_SHIFT, Common, MAX_PENDING_SLOTS, RECEIVER_SLEEPING, TRANSMITTER_DROPPED, Waker,
 };
-use libc::{syscall, SYS_futex, FUTEX_PRIVATE_FLAG, FUTEX_WAIT, FUTEX_WAKE};
+use libc::{FUTEX_PRIVATE_FLAG, FUTEX_WAIT, FUTEX_WAKE, SYS_futex, syscall};
 use std::sync::atomic::{
-    fence,
     Ordering::{AcqRel, Acquire, Relaxed},
+    fence,
 };
 
 #[derive(Debug)]

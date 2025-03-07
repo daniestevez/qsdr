@@ -1,6 +1,6 @@
 use super::Buffer;
 use std::{
-    alloc::{alloc, dealloc, handle_alloc_error, Layout},
+    alloc::{Layout, alloc, dealloc, handle_alloc_error},
     ops::{Deref, DerefMut},
     ptr::NonNull,
 };
