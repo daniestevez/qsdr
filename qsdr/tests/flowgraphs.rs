@@ -5,7 +5,7 @@ use qsdr::{
     prelude::*,
     scheduler::{run, sequence2, sequence4},
 };
-use rand::{prelude::*, Fill};
+use rand::prelude::*;
 
 #[test]
 fn spbroadcast() {
@@ -13,18 +13,16 @@ fn spbroadcast() {
     let buffer_size = 4096;
     let num_buffers = 4;
     let num_elements = 10000;
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
 
     let elements = std::iter::repeat_with(|| {
-        let mut v = vec![0; buffer_size];
-        v.try_fill(&mut rng).unwrap();
-        v.into()
+        std::iter::repeat_with(|| rng.random()).take(buffer_size).collect::<Vec<_>>().into()
     })
     .take(num_elements)
     .collect::<Vec<_>>();
 
     let mut make_buffers = || {
-        std::iter::repeat_with(|| Quantum::new(B::from_fn(buffer_size, |_| rng.gen())))
+        std::iter::repeat_with(|| Quantum::new(B::from_fn(buffer_size, |_| rng.random())))
             .take(num_buffers)
             .collect::<Vec<_>>()
             .into_iter()

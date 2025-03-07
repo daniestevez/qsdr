@@ -90,16 +90,16 @@ mod test {
         let buffer_size = 4096;
         let num_buffers = 4;
         let num_elements = 10000;
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
 
         let buffers =
-            std::iter::repeat_with(|| Quantum::new(B::from_fn(buffer_size, |_| rng.gen())))
+            std::iter::repeat_with(|| Quantum::new(B::from_fn(buffer_size, |_| rng.random())))
                 .take(num_buffers)
                 .collect::<Vec<_>>()
                 .into_iter();
         let elements = std::iter::repeat_with(|| {
             let mut v = vec![0; buffer_size];
-            v.try_fill(&mut rng).unwrap();
+            Fill::fill(&mut v[..], &mut rng);
             v.into()
         })
         .take(num_elements)

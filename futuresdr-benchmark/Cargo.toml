@@ -1,7 +1,7 @@
 [package]
 name = "futuresdr-benchmark"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 authors = ["Daniel Estevez <daniel@destevez.net>"]
 description = "FutureSDR benchmark"
 license = "MIT OR Apache-2.0"
@@ -14,4 +14,4 @@ clap = { version = "4.5.20", features = ["derive"] }
 futuresdr = { git = "https://github.com/FutureSDR/FutureSDR", rev = "0caf989b30297c9a33c6f759f9cd7398340428c9", features = ["flow_scheduler"] }
 tracing = { version = "0.1", features = ["release_max_level_off"] }
 qsdr = { path = "../qsdr" }
-rand = "0.8.5"
+rand = "0.9"

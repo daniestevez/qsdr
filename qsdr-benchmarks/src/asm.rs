@@ -123,7 +123,7 @@ macro_rules! benchmark {
             { $(println!("    {}", $instruction);)* }
             println!();
 
-            let (&mode_cycles, &mode_count) = hist.iter().max_by_key(|(_, &v)| v).unwrap();
+            let (&mode_cycles, &mode_count) = hist.iter().max_by_key(|(_, v)| *v).unwrap();
 
             println!("{}", "cycles | runs".blue());
             println!("{}", "-------------".blue());

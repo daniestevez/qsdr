@@ -1,7 +1,7 @@
 [package]
 name = "qsdr-benchmarks"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 authors = ["Daniel Estevez <daniel@destevez.net>"]
 description = "Benchmarks for qsdr experimental high-performance SDR runtime"
 license = "MIT OR Apache-2.0"
@@ -24,5 +24,5 @@ kanal = "0.1.0-pre8"
 libc = "0.2.159"
 owo-colors = "4.1"
 qsdr = { path = "../qsdr", version = "0.1.0" }
-rand = "0.8.5"
+rand = "0.9"
 tokio = { version = "1.4", features = ["sync", "rt-multi-thread"] }

@@ -138,10 +138,10 @@ macro_rules! check_buffer_args {
 fn single_core(args: &Args, args_sub: &SingleCore) -> Result<()> {
     check_buffer_args!(args_sub);
     pin_cpu()?;
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     let buf_len = args_sub.buffer_size / std::mem::size_of::<f32>();
-    let saxpy = Saxpy::new(rng.gen(), rng.gen());
-    let mut make_buffer = || Buffer::<f32>::from_fn(buf_len, |_| rng.gen());
+    let saxpy = Saxpy::new(rng.random(), rng.random());
+    let mut make_buffer = || Buffer::<f32>::from_fn(buf_len, |_| rng.random());
 
     let clocks_per_sample = 2.0;
     let samples_per_iter = buf_len * args_sub.num_buffers;
@@ -240,12 +240,12 @@ macro_rules! impl_multi {
             rx.insert(0, rx_last);
 
             // create buffers and inject them into the system
-            let mut rng = rand::thread_rng();
+            let mut rng = rand::rng();
             let buf_len = args_sub.buffer_size / std::mem::size_of::<f32>();
             for _ in 0..args_sub.num_buffers {
                 tx.last_mut()
                     .unwrap()
-                    .send(Buffer::<f32>::from_fn(buf_len, |_| rng.gen()))
+                    .send(Buffer::<f32>::from_fn(buf_len, |_| rng.random()))
             }
 
             if_multi_kernel!(
@@ -269,7 +269,7 @@ macro_rules! impl_multi {
 
             macro_rules! make_saxpy {
                 () => {
-                    Saxpy::new(rng.gen(), rng.gen())
+                    Saxpy::new(rng.random(), rng.random())
                 };
             }
 
@@ -312,7 +312,7 @@ macro_rules! impl_multi {
                 let mut tx = tx.pop().unwrap();
                 let mut rx = rx.pop().unwrap();
                 let core = core_ids[idx];
-                if_fake!($is_fake, let mut buf = Buffer::<f32>::from_fn(buf_len, |_| rng.gen()););
+                if_fake!($is_fake, let mut buf = Buffer::<f32>::from_fn(buf_len, |_| rng.random()););
                 make_saxpys!(saxpys, idx);
                 move || {
                     core_affinity::set_for_current(core);
@@ -335,7 +335,7 @@ macro_rules! impl_multi {
                     let mut tx = tx.pop().unwrap();
                     let mut rx = rx.pop().unwrap();
                     let core = core_ids[idx];
-                    if_fake!($is_fake, let mut buf = Buffer::<f32>::from_fn(buf_len, |_| rng.gen()););
+                    if_fake!($is_fake, let mut buf = Buffer::<f32>::from_fn(buf_len, |_| rng.random()););
                     make_saxpys!(saxpys, idx);
                     move || {
                         core_affinity::set_for_current(core);
@@ -426,14 +426,14 @@ impl_multi!(
 
 fn scan_buffer_size(args: &Args, args_sub: &ScanBufferSize) -> Result<()> {
     pin_cpu()?;
-    let mut rng = rand::thread_rng();
-    let saxpy = Saxpy::new(rng.gen(), rng.gen());
+    let mut rng = rand::rng();
+    let saxpy = Saxpy::new(rng.random(), rng.random());
     let clocks_per_sample = 2.0;
 
     let buffer_sizes = (8..24).map(|n| 1 << n);
     for size in buffer_sizes {
         let buf_len = size / std::mem::size_of::<f32>();
-        let mut buf = Buffer::<f32>::from_fn(buf_len, |_| rng.gen());
+        let mut buf = Buffer::<f32>::from_fn(buf_len, |_| rng.random());
 
         let measurement_buffers = (args.clock_frequency * args_sub.measurement_time
             / (clocks_per_sample * buf_len as f64))
