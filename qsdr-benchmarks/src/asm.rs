@@ -1,5 +1,9 @@
 use std::collections::HashMap;
 
+#[cfg(target_arch = "x86_64")]
+#[doc(hidden)]
+pub mod x86_64;
+
 const BENCHMARK_ITERATIONS: usize = 10000;
 
 #[doc(hidden)]

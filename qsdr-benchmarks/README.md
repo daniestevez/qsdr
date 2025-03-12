@@ -16,6 +16,10 @@ Running:
 CPU="cortex-a53" FORCE_COLOR=1 ./instruction_benchmark-<...> --nocapture --test-threads=1 --color=always
 ```
 
+```
+RUSTFLAGS="-C target-cpu=znver3" cargo test --release --test instruction_benchmark -- __no_test && sudo bash -c "CPU=znver3 target/release/deps/instruction_benchmark-<...> --nocapture --test-threads=1 --color=always"
+```
+
 # cargo asm
 
 ```
