@@ -1,5 +1,7 @@
 #[cfg(target_arch = "aarch64")]
 use std::arch::aarch64;
+#[cfg(all(target_arch = "x86_64", target_feature = "avx"))]
+use std::arch::x86_64;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Saxpy {
@@ -25,7 +27,10 @@ impl Saxpy {
         }
     }
 
-    #[cfg(not(target_arch = "aarch64"))]
+    #[cfg(not(any(
+        target_arch = "aarch64",
+        all(target_arch = "x86_64", target_feature = "avx")
+    )))]
     pub fn run_best(&self, buf: &mut [f32]) {
         self.run_generic(buf);
     }
@@ -43,6 +48,11 @@ impl Saxpy {
     #[cfg(target_arch = "aarch64")]
     pub fn run_best_out_of_place(&self, input: &[f32], output: &mut [f32]) {
         self.run_cortex_a53_out_of_place(input, output);
+    }
+
+    #[cfg(all(target_arch = "x86_64", target_feature = "avx"))]
+    pub fn run_best(&self, buf: &mut [f32]) {
+        self.run_znver3(buf);
     }
 
     #[cfg(target_arch = "aarch64")]
@@ -276,12 +286,55 @@ impl Saxpy {
             );
         }
     }
+
+    #[cfg(all(target_arch = "x86_64", target_feature = "avx"))]
+    pub fn run_znver3(&self, buf: &mut [f32]) {
+        const FLOATS_PER_ITER: usize = 32;
+        const REQUIRED_ALIGN: usize = 32;
+        assert_eq!(buf.len() % FLOATS_PER_ITER, 0);
+        assert!(buf.len() >= FLOATS_PER_ITER);
+        assert_eq!(buf.as_ptr().align_offset(REQUIRED_ALIGN), 0);
+
+        unsafe {
+            std::arch::asm!(
+                ".align 4",
+                "2:",
+                "vmulps {y0}, {vA}, ymmword ptr [{buff} + 4*{offset:r}]",
+                "vmulps {y1}, {vA}, ymmword ptr [{buff} + 4*{offset:r} + 32]",
+                "vmulps {y2}, {vA}, ymmword ptr [{buff} + 4*{offset:r} + 64]",
+                "vmulps {y3}, {vA}, ymmword ptr [{buff} + 4*{offset:r} + 96]",
+                "vaddps {y0}, {y0}, {vB}",
+                "vaddps {y1}, {y1}, {vB}",
+                "vaddps {y2}, {y2}, {vB}",
+                "vaddps {y3}, {y3}, {vB}",
+                "vmovaps ymmword ptr [{buff} + 4*{offset:r}], {y0}",
+                "vmovaps ymmword ptr [{buff} + 4*{offset:r} + 32], {y1}",
+                "vmovaps ymmword ptr [{buff} + 4*{offset:r} + 64], {y2}",
+                "vmovaps ymmword ptr [{buff} + 4*{offset:r} + 96], {y3}",
+                "add {offset:r}, 32",
+                "cmp {offset:r}, {offset_end:r}",
+                "jne 2b",
+                buff = in(reg) buf.as_mut_ptr(),
+                offset = inout(reg) 0 => _,
+                offset_end = in(reg) buf.len(),
+                vA = in(ymm_reg) x86_64::_mm256_set1_ps(self.a),
+                vB = in(ymm_reg) x86_64::_mm256_set1_ps(self.b),
+                y0 = out(ymm_reg) _,
+                y1 = out(ymm_reg) _,
+                y2 = out(ymm_reg) _,
+                y3 = out(ymm_reg) _,
+                options(nostack),
+            );
+        }
+    }
 }
 
 #[cfg(test)]
 mod test {
     #[allow(unused_imports)]
     use super::*;
+    #[allow(unused_imports)]
+    use crate::buffers::CacheAlignedBuffer;
     #[allow(unused_imports)]
     use rand::prelude::*;
 
@@ -328,5 +381,21 @@ mod test {
         saxpy.run_generic(&mut buf_generic);
         saxpy.run_cortex_a53_out_of_place(&buf, &mut out);
         assert_eq!(&out, &buf_generic);
+    }
+
+    #[cfg(all(target_arch = "x86_64", target_feature = "avx"))]
+    #[test]
+    fn znver3() {
+        let n = 1024;
+        let mut rng = rand::rng();
+        let mut buf_generic: Vec<f32> = std::iter::repeat_with(|| rng.random()).take(n).collect();
+        let mut buf = CacheAlignedBuffer::<f32>::new(n);
+        buf.clone_from_slice(&buf_generic);
+        let a = rng.random();
+        let b = rng.random();
+        let saxpy = Saxpy::new(a, b);
+        saxpy.run_generic(&mut buf_generic);
+        saxpy.run_znver3(&mut buf);
+        assert_eq!(&buf[..], &buf_generic);
     }
 }
