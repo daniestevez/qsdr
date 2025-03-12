@@ -7,6 +7,11 @@ env:
 
 jobs:
   x86_64:
+    strategy:
+      matrix:
+        target-cpu: [x86-64, native]
+    env:
+      RUSTFLAGS: "-C target-cpu=${{ matrix.target-cpu }}"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -19,7 +24,7 @@ jobs:
     - name: Run tests
       run: cargo test --release --all-targets --verbose -- --skip instruction_benchmark
     - name: Build docs
-      run: RUSTFLAGS="-D warnings" cargo doc
+      run: RUSTFLAGS="${RUSTFLAGS} -D warnings" cargo doc
 
   aarch64:
     runs-on: ubuntu-latest
