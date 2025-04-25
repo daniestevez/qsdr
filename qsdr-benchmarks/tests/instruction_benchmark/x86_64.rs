@@ -18,6 +18,8 @@ mod basic {
 
 mod simd {
     mod kernels {
+        mod cmult;
         mod saxpy;
     }
+    mod pipeline;
 }
