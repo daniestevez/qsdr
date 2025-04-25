@@ -64,22 +64,55 @@ macro_rules! benchmark_x86_64 {
 
         println!("    2:");
         { $(println!("    {}", $instruction);)* }
-        println!("    dec {{__loop_counter:r}}");
+        println!("    sub {{__loop_counter:r}}, 1");
         println!("    jne 2b");
         println!();
 
         $crate::asm::x86_64::run_benchmark(
             || {
                 std::arch::asm!(
-                    ".align 4",
+                    ".align 32",
                     "2:",
                     $($instruction),*,
-                    "dec {__loop_counter:r}",
+                    "sub {__loop_counter:r}, 1",
                     "jne 2b",
                     __loop_counter = inout(reg) iterations => _,
                     $($extra)*);
             },
             iterations,
             $expected_cycles);
+    }
+}
+
+#[cfg(target_feature = "avx")]
+#[inline(always)]
+/// Run a loop that uses YMM registers to "warm them up".
+///
+/// See page 109 in [Agner Fog's Optimizing
+/// Assembly](https://agner.org/optimize/optimizing_assembly.pdf) and the warm
+/// up in `nanoBench` using in [uops.info](https://uops.info/).
+///
+/// They warm up is not run if the `YMM_WARM_UP` environment variable is defined
+/// and equals `0`. This can be used to prevent the warm up from contaminating
+/// results of single test under `perf`, for instance.
+pub fn warm_up_ymm() {
+    if let Ok(s) = std::env::var("YMM_WARM_UP") {
+        if s == "0" {
+            println!("YMM warm up disabled");
+            return;
+        }
+    }
+
+    unsafe {
+        std::arch::asm!(
+            "2:",
+            "vaddps ymm0, ymm1, ymm1",
+            "vaddps ymm0, ymm1, ymm1",
+            "sub {cnt:e}, 1",
+            "jnz 2b",
+            cnt = inout(reg) 10000 => _,
+            out("ymm0") _,
+            options(nostack, nomem),
+        );
     }
 }
