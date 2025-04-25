@@ -35,6 +35,12 @@ impl Saxpy {
         self.run_generic(buf);
     }
 
+    #[cfg(not(any(
+        target_arch = "aarch64",
+        all(target_arch = "x86_64", target_feature = "avx")
+    )))]
+    pub const CLOCKS_PER_SAMPLE: f64 = 1.0;
+
     #[cfg(not(target_arch = "aarch64"))]
     pub fn run_best_out_of_place(&self, input: &[f32], output: &mut [f32]) {
         self.run_generic_out_of_place(input, output);
@@ -46,6 +52,9 @@ impl Saxpy {
     }
 
     #[cfg(target_arch = "aarch64")]
+    pub const CLOCKS_PER_SAMPLE: f64 = Self::CORTEX_A53_CLOCKS_PER_SAMPLE;
+
+    #[cfg(target_arch = "aarch64")]
     pub fn run_best_out_of_place(&self, input: &[f32], output: &mut [f32]) {
         self.run_cortex_a53_out_of_place(input, output);
     }
@@ -54,6 +63,11 @@ impl Saxpy {
     pub fn run_best(&self, buf: &mut [f32]) {
         self.run_znver3(buf);
     }
+
+    #[cfg(all(target_arch = "x86_64", target_feature = "avx"))]
+    pub const CLOCKS_PER_SAMPLE: f64 = Self::ZNVER3_CLOCKS_PER_SAMPLE;
+
+    pub const CORTEX_A53_CLOCKS_PER_SAMPLE: f64 = 2.0;
 
     #[cfg(target_arch = "aarch64")]
     pub fn run_cortex_a53(&self, buf: &mut [f32]) {
@@ -286,6 +300,8 @@ impl Saxpy {
             );
         }
     }
+
+    pub const ZNVER3_CLOCKS_PER_SAMPLE: f64 = 1.0 / 8.0;
 
     #[cfg(all(target_arch = "x86_64", target_feature = "avx"))]
     pub fn run_znver3(&self, buf: &mut [f32]) {

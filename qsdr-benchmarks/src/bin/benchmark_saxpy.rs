@@ -97,13 +97,18 @@ struct ScanBufferSize {
 }
 
 #[inline(always)]
-fn begin_measurement() -> (Instant, u64) {
-    (Instant::now(), get_cpu_cycles())
+fn begin_measurement(cpu_num: usize) -> Result<(Instant, u64)> {
+    Ok((Instant::now(), get_cpu_cycles(cpu_num)?))
 }
 
 #[inline(always)]
-fn make_measurement(time: Instant, cycles: u64, samples_per_measurement: usize) -> (Instant, u64) {
-    let cycles_now = get_cpu_cycles();
+fn make_measurement(
+    time: Instant,
+    cycles: u64,
+    samples_per_measurement: usize,
+    cpu_num: usize,
+) -> Result<(Instant, u64)> {
+    let cycles_now = get_cpu_cycles(cpu_num)?;
     let now = Instant::now();
     let elapsed = now - time;
     let samples_per_sec = samples_per_measurement as f64 / elapsed.as_secs_f64();
@@ -115,14 +120,20 @@ fn make_measurement(time: Instant, cycles: u64, samples_per_measurement: usize) 
          samples/cycle = {samples_per_cycle:.3}, \
          cycles/s = {cycles_per_sec:.3e}"
     );
-    (now, cycles_now)
+    Ok((now, cycles_now))
 }
 
 #[inline(always)]
-fn update_measurement(time: &mut Instant, cycles: &mut u64, samples_per_measurement: usize) {
-    let m = make_measurement(*time, *cycles, samples_per_measurement);
+fn update_measurement(
+    time: &mut Instant,
+    cycles: &mut u64,
+    samples_per_measurement: usize,
+    cpu_num: usize,
+) -> Result<()> {
+    let m = make_measurement(*time, *cycles, samples_per_measurement, cpu_num)?;
     *time = m.0;
     *cycles = m.1;
+    Ok(())
 }
 
 macro_rules! check_buffer_args {
@@ -137,16 +148,15 @@ macro_rules! check_buffer_args {
 
 fn single_core(args: &Args, args_sub: &SingleCore) -> Result<()> {
     check_buffer_args!(args_sub);
-    pin_cpu()?;
+    let cpu_num = pin_cpu()?;
     let mut rng = rand::rng();
     let buf_len = args_sub.buffer_size / std::mem::size_of::<f32>();
     let saxpy = Saxpy::new(rng.random(), rng.random());
     let mut make_buffer = || Buffer::<f32>::from_fn(buf_len, |_| rng.random());
 
-    let clocks_per_sample = 2.0;
     let samples_per_iter = buf_len * args_sub.num_buffers;
     let measurement_iters = (args.clock_frequency * args_sub.measurement_interval
-        / (clocks_per_sample * samples_per_iter as f64))
+        / (Saxpy::CLOCKS_PER_SAMPLE * samples_per_iter as f64))
         .ceil() as usize;
     let samples_per_measurement = measurement_iters * samples_per_iter;
 
@@ -154,24 +164,24 @@ fn single_core(args: &Args, args_sub: &SingleCore) -> Result<()> {
         let mut buffers: Vec<Buffer<f32>> = std::iter::repeat_with(make_buffer)
             .take(args_sub.num_buffers)
             .collect();
-        let (mut time, mut cycles) = begin_measurement();
+        let (mut time, mut cycles) = begin_measurement(cpu_num)?;
         loop {
             for _ in 0..measurement_iters {
                 for buf in buffers.iter_mut() {
                     saxpy.run_best(&mut buf[..]);
                 }
             }
-            update_measurement(&mut time, &mut cycles, samples_per_measurement);
+            update_measurement(&mut time, &mut cycles, samples_per_measurement, cpu_num)?;
         }
     } else {
         // optimized case for only one buffer
         let mut buffer = make_buffer();
-        let (mut time, mut cycles) = begin_measurement();
+        let (mut time, mut cycles) = begin_measurement(cpu_num)?;
         loop {
             for _ in 0..measurement_iters {
                 saxpy.run_best(&mut buffer[..]);
             }
-            update_measurement(&mut time, &mut cycles, samples_per_measurement);
+            update_measurement(&mut time, &mut cycles, samples_per_measurement, cpu_num)?;
         }
     }
 }
@@ -261,9 +271,8 @@ macro_rules! impl_multi {
                     })
                     .collect::<Vec<_>>(););
 
-            let clocks_per_sample = 2.0;
             let measurement_iters = (args.clock_frequency * args_sub.measurement_interval
-                / (clocks_per_sample * buf_len as f64))
+                / (Saxpy::CLOCKS_PER_SAMPLE * buf_len as f64))
                 .ceil() as usize;
             let samples_per_measurement = measurement_iters * buf_len;
 
@@ -317,12 +326,12 @@ macro_rules! impl_multi {
                 move || {
                     core_affinity::set_for_current(core);
                     $block! {
-                        let (mut time, mut cycles) = begin_measurement();
+                        let (mut time, mut cycles) = begin_measurement(core.id).unwrap();
                         loop {
                             for _ in 0..measurement_iters {
                                 do_work!(tx, rx, buf, saxpys);
                             }
-                            update_measurement(&mut time, &mut cycles, samples_per_measurement);
+                            update_measurement(&mut time, &mut cycles, samples_per_measurement, core.id).unwrap();
                         }
                     }
                 }
@@ -425,10 +434,9 @@ impl_multi!(
 );
 
 fn scan_buffer_size(args: &Args, args_sub: &ScanBufferSize) -> Result<()> {
-    pin_cpu()?;
+    let cpu_num = pin_cpu()?;
     let mut rng = rand::rng();
     let saxpy = Saxpy::new(rng.random(), rng.random());
-    let clocks_per_sample = 2.0;
 
     let buffer_sizes = (8..24).map(|n| 1 << n);
     for size in buffer_sizes {
@@ -436,16 +444,16 @@ fn scan_buffer_size(args: &Args, args_sub: &ScanBufferSize) -> Result<()> {
         let mut buf = Buffer::<f32>::from_fn(buf_len, |_| rng.random());
 
         let measurement_buffers = (args.clock_frequency * args_sub.measurement_time
-            / (clocks_per_sample * buf_len as f64))
+            / (Saxpy::CLOCKS_PER_SAMPLE * buf_len as f64))
             .ceil() as usize;
         let samples_per_measurement = measurement_buffers * buf_len;
 
         print!("buffer size = {size}, ");
-        let (time, cycles) = begin_measurement();
+        let (time, cycles) = begin_measurement(cpu_num)?;
         for _ in 0..measurement_buffers {
             saxpy.run_best(&mut buf[..]);
         }
-        make_measurement(time, cycles, samples_per_measurement);
+        make_measurement(time, cycles, samples_per_measurement, cpu_num)?;
     }
     Ok(())
 }

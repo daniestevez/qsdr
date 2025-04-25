@@ -13,11 +13,12 @@ pub mod affinity {
 
     // pin to a single CPU to prevent seeing jumps in get_cpu_cycles
     // (pmccntr_el0 under aarch64) if we get migrated to another CPU
-    pub fn pin_cpu() -> Result<()> {
-        if !core_affinity::set_for_current(get_core_ids()?[0]) {
-            anyhow::bail!("could not pin to CPU 0");
+    pub fn pin_cpu() -> Result<usize> {
+        let cpu = get_core_ids()?[0];
+        if !core_affinity::set_for_current(cpu) {
+            anyhow::bail!("could not pin to CPU {}", cpu.id);
         }
-        Ok(())
+        Ok(cpu.id)
     }
 
     pub fn pin_cpu_num(cpu_num: usize) -> Result<()> {
