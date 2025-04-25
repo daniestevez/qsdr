@@ -1,6 +1,15 @@
-use super::get_cpu_cycles;
 use crate::{affinity::pin_cpu_num, msr::Msr};
 use std::time::Instant;
+
+#[inline(always)]
+pub fn rdtsc() -> u64 {
+    let rax: u64;
+    let rdx: u64;
+    unsafe {
+        std::arch::asm!("rdtsc", out("rax") rax, out("rdx") rdx);
+    }
+    (rdx << 32) | rax
+}
 
 #[doc(hidden)]
 pub fn run_benchmark(mut f: impl FnMut(), iterations: u64, expected_aperf: Option<f64>) {
@@ -10,11 +19,11 @@ pub fn run_benchmark(mut f: impl FnMut(), iterations: u64, expected_aperf: Optio
 
     let start = Instant::now();
     let start_aperf = msr.read_aperf().unwrap();
-    let start_tsc = get_cpu_cycles();
+    let start_tsc = rdtsc();
 
     f();
 
-    let end_tsc = get_cpu_cycles();
+    let end_tsc = rdtsc();
     let end_aperf = msr.read_aperf().unwrap();
     let elapsed = start.elapsed();
 

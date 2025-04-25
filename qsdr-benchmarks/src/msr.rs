@@ -6,6 +6,7 @@ use std::{
 
 pub struct Msr {
     file: File,
+    cpu_number: usize,
 }
 
 const APERF_ADDR: u64 = 0xe8;
@@ -14,6 +15,7 @@ impl Msr {
     pub fn new(cpu_number: usize) -> Result<Msr> {
         Ok(Msr {
             file: File::open(format!("/dev/cpu/{cpu_number}/msr"))?,
+            cpu_number,
         })
     }
 
@@ -27,5 +29,9 @@ impl Msr {
 
     pub fn read_aperf(&mut self) -> Result<u64> {
         self.read_register(APERF_ADDR)
+    }
+
+    pub fn cpu_number(&self) -> usize {
+        self.cpu_number
     }
 }

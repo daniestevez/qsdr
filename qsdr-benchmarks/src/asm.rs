@@ -1,3 +1,4 @@
+use anyhow::Result;
 use std::collections::HashMap;
 
 #[cfg(target_arch = "x86_64")]
@@ -80,31 +81,38 @@ macro_rules! time_asm {
 
 #[cfg(not(any(target_arch = "x86_64", target_arch = "aarch64")))]
 #[inline(always)]
-pub fn get_cpu_cycles() -> u64 {
-    0
+pub fn get_cpu_cycles(_cpu_num: usize) -> Result<u64> {
+    Ok(0)
 }
 
 // Note that this counts reference clock cycles, so the count is not affected by
 // frequency scaling (and it should be).
 #[cfg(target_arch = "x86_64")]
 #[inline(always)]
-pub fn get_cpu_cycles() -> u64 {
-    let rax: u64;
-    let rdx: u64;
-    unsafe {
-        std::arch::asm!("rdtsc", out("rax") rax, out("rdx") rdx);
+pub fn get_cpu_cycles(cpu_num: usize) -> Result<u64> {
+    use crate::msr::Msr;
+    use std::cell::RefCell;
+
+    std::thread_local! {
+        static MSR: RefCell<Option<Msr>> = const { RefCell::new(None) };
     }
-    (rdx << 32) | rax
+
+    MSR.with_borrow_mut(|msr| {
+        if msr.as_ref().is_none_or(|m| m.cpu_number() != cpu_num) {
+            msr.replace(Msr::new(cpu_num)?);
+        }
+        msr.as_mut().unwrap().read_aperf()
+    })
 }
 
 #[cfg(target_arch = "aarch64")]
 #[inline(always)]
-pub fn get_cpu_cycles() -> u64 {
+pub fn get_cpu_cycles(_cpu_num: usize) -> Result<u64> {
     let ret;
     unsafe {
         std::arch::asm!("mrs {0}, pmccntr_el0", out(reg) ret);
     }
-    ret
+    Ok(ret)
 }
 
 #[macro_export]
