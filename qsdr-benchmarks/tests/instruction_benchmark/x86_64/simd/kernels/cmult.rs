@@ -14,7 +14,7 @@ fn cmult_avx() {
             "cmult kernel core (AVX)";
             1_000_000_000;
             expected_cycles! {
-                "znver3" => 2.166, // ?
+                "znver3" => 2.0,
             };
             "vmovaps ymm0, ymmword ptr [{x}]",
             "vmovaps ymm1, ymmword ptr [{y}]",
@@ -50,7 +50,7 @@ fn cmult_avx_fma() {
             "cmult kernel core (AVX FMA)";
             1_000_000_000;
             expected_cycles! {
-                "znver3" => 2.166, // ??
+                "znver3" => 2.0,
             };
             "vmovaps ymm0, ymmword ptr [{x}]",
             "vmovaps ymm1, ymmword ptr [{y}]",

@@ -105,11 +105,11 @@ macro_rules! benchmark_x86_64 {
 /// and equals `0`. This can be used to prevent the warm up from contaminating
 /// results of single test under `perf`, for instance.
 pub fn warm_up_ymm() {
-    if let Ok(s) = std::env::var("YMM_WARM_UP") {
-        if s == "0" {
-            println!("YMM warm up disabled");
-            return;
-        }
+    if let Ok(s) = std::env::var("YMM_WARM_UP")
+        && s == "0"
+    {
+        println!("YMM warm up disabled");
+        return;
     }
 
     unsafe {
